@@ -5,26 +5,28 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "gastos")
-public class Gastos implements Serializable {
+@Table(name = "transactions")
+public class Transactions implements Serializable {
 	private static final long serialVersionUID = -5754246207015712518L;
 
 	private Long id;
 	private Date data;
 	private String descricao;
 	private Double valor;
-	private String tipo;
+	private Type tipo;
 	private Date dataAtualizacao;
 
-	public Gastos() {
+	public Transactions() {
 	}
 	
 	@Id
@@ -73,12 +75,12 @@ public class Gastos implements Serializable {
 		this.valor = valor;
 	}
 
-	@Column(name = "tipo", nullable = true)
-	public String getTipo() {
+	@ManyToOne(fetch = FetchType.EAGER)
+	public Type getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(Type tipo) {
 		this.tipo = tipo;
 	}
 
@@ -95,7 +97,7 @@ public class Gastos implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Gastos [id=\" + id + \", data=" + data + ", descricao=" + descricao + ", valor=" + valor
+		return "transactions [id=\" + id + \", data=" + data + ", descricao=" + descricao + ", valor=" + valor
 				+ ", tipo=" + tipo + ", dataAtualizacao=" + dataAtualizacao + "]";
 	}
 

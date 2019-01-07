@@ -10,14 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "tipo")
-public class Tipo implements Serializable {
+@Table(name = "type")
+public class Type implements Serializable {
 	private static final long serialVersionUID = -5754246207015712518L;
 
 	private Long id;
-	private String tipo;
+	private String type;
 
-	public Tipo() {
+	public Type() {
 	}
 	
 	@Id
@@ -30,17 +30,17 @@ public class Tipo implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "tipo", nullable = true)
-	public String getTipo() {
-		return tipo;
+	@Column(name = "type", nullable = true)
+	public String getType() {
+		return type;
 	}
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+	public void setType(String type) {
+		this.type = type;
 	}
 	@Override
 	public String toString() {
-		return "Tipo [id=\" + id + \", tipo=" + tipo + "]";
+		return "Type [id=\" + id + \", type=" + type + "]";
 	}
 
 }

@@ -7,16 +7,18 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class GastosDto {
+import com.mila.controledegastos.api.entities.Type;
+
+public class TransactionsDto {
 	
 	private Long id;
 	private Date data;
 	private String descricao;
 	private Double valor;
-	private String tipo;
+	private Type tipo;
 	private Date dataAtualizacao;
 	
-	public GastosDto() {
+	public TransactionsDto() {
 	}
 
 	public Long getId() {
@@ -57,20 +59,18 @@ public class GastosDto {
 	public void setValor(Double valor) {
 		this.valor = valor;
 	}
-
-	@NotEmpty(message = "Tipo não pode ser vazio.")
-	@Length(min = 5, max = 200, message = "Tipo deve conter entre 5 e 200 caracteres.")
-	public String getTipo() {
+	
+	public Type getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(Type tipo) {
 		this.tipo = tipo;
 	}
 	
 	@Override
 	public String toString() {	
-		return "CadastroGastosDto [id=\" + id + \", data=" + data + ", descricao=" + descricao + ", valor=" + valor
+		return "CadastrotransactionsDto [id=\" + id + \", data=" + data + ", descricao=" + descricao + ", valor=" + valor
 				+ ", tipo=" + tipo + ", dataAtualizacao=" + dataAtualizacao + "]";
 	}
 }
