@@ -4,10 +4,14 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.mila.controledegastos.api.enums.TransactionType;
 
 @Entity
 @Table(name = "type")
@@ -16,6 +20,7 @@ public class Type implements Serializable {
 
 	private Long id;
 	private String type;
+	private TransactionType transactionType;
 
 	public Type() {
 	}
@@ -38,9 +43,18 @@ public class Type implements Serializable {
 	public void setType(String type) {
 		this.type = type;
 	}
+
+	@Enumerated(EnumType.STRING)
+	public TransactionType getTransactionType() {
+		return transactionType;
+	}
+
+	public void setTransactionType(TransactionType transactionType) {
+		this.transactionType = transactionType;
+	}
+	
 	@Override
 	public String toString() {
 		return "Type [id=\" + id + \", type=" + type + "]";
-	}
-
+	}	
 }

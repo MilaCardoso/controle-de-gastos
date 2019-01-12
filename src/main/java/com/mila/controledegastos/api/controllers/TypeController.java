@@ -97,6 +97,7 @@ public class TypeController {
 	private Type converterTypeParaDto(TypeDto typeDto) {
 		Type type = new Type();
 		type.setType(typeDto.getType());
+		type.setTransactionType(typeDto.getTransactionType());
 
 		return type;
 	}
@@ -111,6 +112,7 @@ public class TypeController {
 		TypeDto typeDto = new TypeDto();
 		typeDto.setId(type.getId());
 		typeDto.setType(type.getType());
+		typeDto.setTransactionType(type.getTransactionType());
 
 		return typeDto;
 	}

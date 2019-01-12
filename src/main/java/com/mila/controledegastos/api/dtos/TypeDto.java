@@ -1,12 +1,18 @@
 package com.mila.controledegastos.api.dtos;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import com.mila.controledegastos.api.enums.TransactionType;
 
 public class TypeDto {
 	
 	private Long id;
 	private String type;
+	private TransactionType transactionType;
 	
 	public TypeDto() {
 	}
@@ -27,6 +33,15 @@ public class TypeDto {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+	
+	@Enumerated(EnumType.STRING)
+	public TransactionType getTransactionType() {
+		return transactionType;
+	}
+
+	public void setTransactionType(TransactionType transactionType) {
+		this.transactionType = transactionType;
 	}
 	
 	@Override
