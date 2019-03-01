@@ -23,8 +23,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mila.controledegastos.api.dtos.MonthlySumDto;
 import com.mila.controledegastos.api.dtos.TypeDto;
 import com.mila.controledegastos.api.entities.Type;
+import com.mila.controledegastos.api.enums.TransactionType;
 import com.mila.controledegastos.api.response.Response;
 import com.mila.controledegastos.api.services.TypeService;
 
@@ -241,4 +243,22 @@ public class TypeController {
 
 	}
 
+	/**
+	 * Retorna soma do INCOME e OUTCOME.
+	 * 
+	 * @param Mes
+	 * @return ResponseEntity<Response<TypeDto>>
+	 */
+	@GetMapping(value = "monthlySum/{mes}")
+	public ResponseEntity<Response<MonthlySumDto>> monthlySum(@PathVariable("mes") Integer mes) {
+		log.info("Somando por transaction type");
+		Response<MonthlySumDto> response = new Response<MonthlySumDto>();
+		MonthlySumDto monthlySumDto = new MonthlySumDto();
+		monthlySumDto.setSumIncome(this.typeService.somaValoresPorTransactionType(TransactionType.IN, mes));
+		monthlySumDto.setSumOutcome(this.typeService.somaValoresPorTransactionType(TransactionType.OUT, mes));
+		
+		response.setData(monthlySumDto);
+		return ResponseEntity.ok(response);
+	}
+	
 }

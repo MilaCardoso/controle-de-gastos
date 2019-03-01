@@ -1,9 +1,11 @@
 package com.mila.controledegastos.api.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import com.mila.controledegastos.api.entities.Type;
+import com.mila.controledegastos.api.enums.TransactionType;
 
 public interface TypeService {
 
@@ -44,6 +46,13 @@ public interface TypeService {
 	 * @param id
 	 */
 	void remover(Long id);
+	
+	/**
+	 * Soma Valores Por TransactionType
+	 * @param transactionType
+	 * @return
+	 */
+	Double somaValoresPorTransactionType(TransactionType transactionType, Integer mes);	
 	
 }
 

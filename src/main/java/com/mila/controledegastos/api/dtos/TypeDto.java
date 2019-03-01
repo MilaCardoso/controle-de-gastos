@@ -26,7 +26,7 @@ public class TypeDto {
 	}
 	
 	@NotEmpty(message = "Type não pode ser vazio.")
-	@Length(min = 5, max = 200, message = "Type deve conter entre 5 e 200 caracteres.")
+	@Length(min = 2, max = 200, message = "Type deve conter entre 2 e 200 caracteres.")
 	public String getType() {
 		return type;
 	}
