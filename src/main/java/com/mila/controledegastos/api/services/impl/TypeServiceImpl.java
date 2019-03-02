@@ -1,6 +1,5 @@
 package com.mila.controledegastos.api.services.impl;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,5 +63,6 @@ public class TypeServiceImpl implements TypeService {
 	    System.out.println(query.getSingleResult());
 	    return query.getSingleResult();
 	}
+	
 	
 }

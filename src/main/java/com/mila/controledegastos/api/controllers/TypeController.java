@@ -255,7 +255,8 @@ public class TypeController {
 		Response<MonthlySumDto> response = new Response<MonthlySumDto>();
 		MonthlySumDto monthlySumDto = new MonthlySumDto();
 		monthlySumDto.setSumIncome(this.typeService.somaValoresPorTransactionType(TransactionType.IN, mes));
-		monthlySumDto.setSumOutcome(this.typeService.somaValoresPorTransactionType(TransactionType.OUT, mes));
+		monthlySumDto.setSumOutcome(this.typeService.somaValoresPorTransactionType(TransactionType.OUT, mes));	
+		monthlySumDto.setDiferenca(monthlySumDto.getSumIncome() - monthlySumDto.getSumOutcome());
 		
 		response.setData(monthlySumDto);
 		return ResponseEntity.ok(response);

@@ -1,16 +1,18 @@
 package com.mila.controledegastos.api.dtos;
 
-import java.math.BigDecimal;
-
 public class MonthlySumDto {
 	
 	private Double sumIncome;
 	private Double sumOutcome;
+	private Double diferenca;
 	
 	public MonthlySumDto() {
 	}
 	
 	public Double getSumIncome() {
+		if(sumIncome == null) {
+			sumIncome = (double) 00;
+		}
 		return sumIncome;
 	}
 
@@ -19,6 +21,9 @@ public class MonthlySumDto {
 	}
 
 	public Double getSumOutcome() {
+		if(sumOutcome == null) {
+			sumOutcome = (double) 00;
+		}
 		return sumOutcome;
 	}
 
@@ -26,4 +31,12 @@ public class MonthlySumDto {
 		this.sumOutcome = sumOutcome;
 	}
 
+	public Double getDiferenca() {
+		return diferenca;
+	}
+
+	public void setDiferenca(Double diferenca) {
+		this.diferenca = diferenca;
+	}
+	
 }
