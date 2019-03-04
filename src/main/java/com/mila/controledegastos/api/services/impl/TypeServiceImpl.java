@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mila.controledegastos.api.dtos.TypeSumDto;
 import com.mila.controledegastos.api.entities.Type;
 import com.mila.controledegastos.api.enums.TransactionType;
 import com.mila.controledegastos.api.repositories.TypeRepository;
@@ -57,12 +59,22 @@ public class TypeServiceImpl implements TypeService {
 	}
 	
 	public Double somaValoresPorTransactionType(TransactionType transactionType, Integer mes){
-	    TypedQuery<Double> query = manager.createQuery("select sum(p.valor) from Transactions p join p.tipo t where t.transactionType = :transactionType and month(p.data) = :mes", Double.class);
+	    TypedQuery<Double> query = manager.createQuery("select sum(p.valor) from Transactions p join p.tipo t "
+	    		                 + "where t.transactionType = :transactionType and month(p.data) = :mes", Double.class);
 	    query.setParameter("transactionType", transactionType);
 	    query.setParameter("mes", mes);
-	    System.out.println(query.getSingleResult());
+
 	    return query.getSingleResult();
 	}
 	
+	public List<TypeSumDto> somaValoresPorTipo(TransactionType transactionType, Integer mes){
+	   Query query = manager.createQuery("select t, sum(p.valor) from Transactions p join p.tipo t "
+	    		                 + " where t.transactionType = :transactionType and month(p.data) = :mes "
+	    		                 + " group by t");
+	    query.setParameter("transactionType", transactionType);
+	    query.setParameter("mes", mes);
+
+	    return query.getResultList();
+	}
 	
 }

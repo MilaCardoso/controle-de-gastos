@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mila.controledegastos.api.dtos.MonthlySumDto;
 import com.mila.controledegastos.api.dtos.TypeDto;
+import com.mila.controledegastos.api.dtos.TypeSumDto;
 import com.mila.controledegastos.api.entities.Type;
 import com.mila.controledegastos.api.enums.TransactionType;
 import com.mila.controledegastos.api.response.Response;
@@ -260,6 +261,25 @@ public class TypeController {
 		
 		response.setData(monthlySumDto);
 		return ResponseEntity.ok(response);
+	}
+	
+	/**
+	 * Retorna soma por tipo.
+	 * 
+	 * @param Mes
+	 * @param transactionType 
+	 * @return ResponseEntity<Response<TypeDto>>
+	 */
+	@GetMapping(value = "TypeSum/{mes}/{transactionType}")
+	public ResponseEntity<Response<List<TypeSumDto>>> typeSum(@PathVariable("mes") Integer mes, 
+			                                            @PathVariable("transactionType") TransactionType transactionType) {
+		log.info("Soma valores por type");
+		Response<List<TypeSumDto>> response = new Response<>();
+		List<TypeSumDto> typeSumList = this.typeService.somaValoresPorTipo(transactionType, mes);
+
+		response.setData(typeSumList);
+		return ResponseEntity.ok(response);
+		
 	}
 	
 }

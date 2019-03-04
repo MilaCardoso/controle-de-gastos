@@ -3,6 +3,7 @@ package com.mila.controledegastos.api.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.mila.controledegastos.api.dtos.TypeSumDto;
 import com.mila.controledegastos.api.entities.Type;
 import com.mila.controledegastos.api.enums.TransactionType;
 
@@ -52,6 +53,14 @@ public interface TypeService {
 	 * @return
 	 */
 	Double somaValoresPorTransactionType(TransactionType transactionType, Integer mes);	
+	
+	/**
+	 * Soma Valores Por Tipo
+	 * @param transactionType 
+	 * @param mes 
+	 * @return
+	 */
+	List<TypeSumDto> somaValoresPorTipo(TransactionType transactionType, Integer mes);
 	
 }
 
