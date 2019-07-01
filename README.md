@@ -1,2 +1,2 @@
-# controle-de-gastos
-Sistema para controle de gastos em Java com Spring Boot
+# financial-project
+API to control expenses in Java8 with Spring Boot, JPA and MySQL

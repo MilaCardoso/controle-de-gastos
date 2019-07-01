@@ -2,8 +2,6 @@ package com.mila.controledegastos.api.controllers;
 
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -12,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mila.controledegastos.api.dtos.TransactionsDto;
 import com.mila.controledegastos.api.entities.Transactions;
+import com.mila.controledegastos.api.repositories.TransactionsRepository;
 import com.mila.controledegastos.api.response.Response;
 import com.mila.controledegastos.api.services.TransactionsService;
 
@@ -36,6 +36,9 @@ public class TransactionsController {
 
 	@Autowired
 	private TransactionsService transactionsService;
+	
+	@Autowired
+	private TransactionsRepository repository;
 
 	public TransactionsController() {
 	}
@@ -218,26 +221,35 @@ public class TransactionsController {
 	 * 
 	 * @return ResponseEntity<Response<transactionsDto>>
 	 */
-	@GetMapping(value = "all")
-	public ResponseEntity<Response<List<TransactionsDto>>> buscarPorTodostransactions() {
-		log.info("Buscando todos os registros transactions");
-		Response<List<TransactionsDto>> response = new Response<>();
-		Optional<List<Transactions>> transactionsList = this.transactionsService.buscarPorTodosTransactions();
+	@RequestMapping("all")
+	public Iterable listaTransactions(Model model){
 
-		if (!transactionsList.isPresent()) {
-			log.error("Não existe registros transactions");
-			response.getErrors().add("Não existe registros transactions");
-			return ResponseEntity.badRequest().body(response);
-		}
+	    Iterable<Transactions> transactions = repository.findAll();
+	    model.addAttribute("transactions", transactions);
 
-		List<TransactionsDto> listTransactionsDto = new ArrayList<>();
-		for (Transactions transactions : transactionsList.get()) {
-			listTransactionsDto.add(this.converterDtoParaTransactions(transactions));
-		}
-		response.setData(listTransactionsDto);
-		return ResponseEntity.ok(response);
-
+		return (transactions);	
 	}
+	
+//	@GetMapping(value = "all")
+//	public ResponseEntity<Response<List<TransactionsDto>>> buscarPorTodostransactions() {
+//		log.info("Buscando todos os registros transactions");
+//		Response<List<TransactionsDto>> response = new Response<>();
+//		Optional<List<Transactions>> transactionsList = this.transactionsService.buscarPorTodosTransactions();
+//
+//		if (!transactionsList.isPresent()) {
+//			log.error("Não existe registros transactions");
+//			response.getErrors().add("Não existe registros transactions");
+//			return ResponseEntity.badRequest().body(response);
+//		}
+//
+//		List<TransactionsDto> listTransactionsDto = new ArrayList<>();
+//		for (Transactions transactions : transactionsList.get()) {
+//			listTransactionsDto.add(this.converterDtoParaTransactions(transactions));
+//		}
+//		response.setData(listTransactionsDto);
+//		return ResponseEntity.ok(response);
+//
+//	}
 
 
 }
