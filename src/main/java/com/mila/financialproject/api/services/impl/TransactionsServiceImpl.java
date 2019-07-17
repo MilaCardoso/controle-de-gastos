@@ -16,7 +16,6 @@ import com.mila.financialproject.api.services.TransactionsService;
 
 @Service
 public class TransactionsServiceImpl implements TransactionsService {
-//public class TransactionsServiceImpl implements TransactionsService {
 
 	private static final Logger log = LoggerFactory.getLogger(TransactionsServiceImpl.class);
 	
@@ -30,19 +29,19 @@ public class TransactionsServiceImpl implements TransactionsService {
 	}
 
 	@Override
-	public Optional<Transactions> getByDate(Date data) {
-		log.info("Getting expense by date {}", data);
-		return Optional.ofNullable(this.transactionsRepository.findByDate(data));
+	public Optional<Transactions> getByDate(Date date) {
+		log.info("Getting expense by date {}", date);
+		return Optional.ofNullable(this.transactionsRepository.findByDate(date));
 	}
 
 	@Override
-	public Optional<Transactions> getByType(Type tipo) {
-		log.info("Getting expense by type {}", tipo);
-		return Optional.ofNullable(this.transactionsRepository.findByType(tipo));
+	public Optional<Transactions> getByType(Type type) {
+		log.info("Getting expense by type {}", type);
+		return Optional.ofNullable(this.transactionsRepository.findByType(type));
 	}
 	
-// rever este get	
-	public Optional<Transactions> getById1(Long id) {
+	@Override
+	public Optional<Transactions> getById(Long id) {
 		log.info("Getting by ID {}", id);
 		return Optional.ofNullable(this.transactionsRepository.findOne(id));
 	}
@@ -59,16 +58,5 @@ public class TransactionsServiceImpl implements TransactionsService {
 		return null;
 	}
 
-	@Override
-	public Optional<Transactions> getById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
-//	@Override
-//	public Optional<List<Transactions>> getAllTransactions() {
-//		log.info("Getting all registers transactions");
-//		return Optional.ofNullable(this.transactionsRepository.findAll());
-//	}
-
 }

@@ -48,7 +48,7 @@ public class TypeServiceImpl implements TypeService {
 	}
 	
 	public void remove(Long id) {
-		log.info("Removendo o type ID {}", id);
+		log.info("Removendo type ID {}", id);
 		this.typeRepository.delete(id);
 	}
 

@@ -193,7 +193,7 @@ public class TransactionsController {
 	 * 
 	 */
 	@GetMapping(value = "id/{id}")
-	public ResponseEntity<Response<TransactionsDto>> buscarPorId(@PathVariable("id") Long id) {
+	public ResponseEntity<Response<TransactionsDto>> findById(@PathVariable("id") Long id) {
 		log.info("Getting expense by ID: {}", id);
 		Response<TransactionsDto> response = new Response<TransactionsDto>();
 		Optional<Transactions> transactions = this.transactionsService.getById(id);

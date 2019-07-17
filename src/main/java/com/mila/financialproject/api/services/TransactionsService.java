@@ -23,7 +23,7 @@ public interface TransactionsService {
 	 * @param  date
 	 * @return Optional<Transactions>
 	 */
-	Optional<Transactions> getByDate(Date data);
+	Optional<Transactions> getByDate(Date date);
 	
 	/**
 	 * Search and return one expense by type.
@@ -31,7 +31,7 @@ public interface TransactionsService {
 	 * @param  type
 	 * @return Optional<Transactions>
 	 */
-	Optional<Transactions> getByType(Type tipo);
+	Optional<Transactions> getByType(Type type);
 	
 	/**
 	 * Search and return one expense by ID.
