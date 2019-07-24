@@ -53,10 +53,9 @@ public class TransactionsServiceImpl implements TransactionsService {
 	}
 
 	@Override
-	public Optional<List<Transactions>> getByAllTransactions() {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<List<Transactions>> getAllTransactions() {
+		log.info("Getting all registers transactions");
+		return Optional.ofNullable(this.transactionsRepository.findAll());
 	}
-
 	
 }

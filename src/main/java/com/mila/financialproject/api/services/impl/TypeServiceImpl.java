@@ -54,7 +54,7 @@ public class TypeServiceImpl implements TypeService {
 
 	@Override
 	public Optional<List<Type>> getAllType() {
-		log.info("Buscando todos os registros type");
+		log.info("Getting all registers type");
 		return Optional.ofNullable(this.typeRepository.findAll());
 	}
 	

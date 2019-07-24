@@ -53,7 +53,7 @@ public interface TransactionsService {
 	 * 
 	 * @return Optional<List<Transactions>>
 	 */
-	Optional<List<Transactions>> getByAllTransactions();
+	Optional<List<Transactions>> getAllTransactions();
 	
 }
 

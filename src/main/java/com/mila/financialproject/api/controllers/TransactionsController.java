@@ -2,6 +2,8 @@ package com.mila.financialproject.api.controllers;
 
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -10,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mila.financialproject.api.dtos.TransactionsDto;
 import com.mila.financialproject.api.entities.Transactions;
-import com.mila.financialproject.api.repositories.TransactionsRepository;
 import com.mila.financialproject.api.response.Response;
 import com.mila.financialproject.api.services.TransactionsService;
 
@@ -36,9 +36,6 @@ public class TransactionsController {
 
 	@Autowired
 	private TransactionsService transactionsService;
-	
-	@Autowired
-	private TransactionsRepository repository;
 
 	public TransactionsController() {
 	}
@@ -56,7 +53,7 @@ public class TransactionsController {
 			throws ParseException {
 		log.info("Post new expense: {}", TransactionsDto.toString());
 		Response<TransactionsDto> response = new Response<TransactionsDto>();
-		Transactions transactions = this.fromTransactionsToDto(TransactionsDto);
+		Transactions transactions = this.fromDtoToTransactions(TransactionsDto);
 
 		if (result.hasErrors()) {
 			log.error("Error validating expense: {}", result.getAllErrors());
@@ -77,7 +74,7 @@ public class TransactionsController {
 	 * @return transactions
 	 * @throws NoSuchAlgorithmException
 	 */
-	private Transactions fromTransactionsToDto(TransactionsDto transactionsDto) {
+	private Transactions fromDtoToTransactions(TransactionsDto transactionsDto) {
 		Transactions transactions = new Transactions();
 		transactions.setDate(transactionsDto.getDate());
 		transactions.setDescription(transactionsDto.getDescription());
@@ -172,8 +169,6 @@ public class TransactionsController {
 	 * @param  result
 	 * @throws NoSuchAlgorithmException
 	 * 
-	 * PERGUNTAR FELIPE
-	 * 
 	 */ 
 	private void updateDataTransactions(Transactions transactions, TransactionsDto transactionsDto, BindingResult result)
 			throws NoSuchAlgorithmException {
@@ -213,35 +208,25 @@ public class TransactionsController {
 	 * 
 	 * @return ResponseEntity<Response<transactionsDto>>
 	 */
-	@RequestMapping("all")
-	public Iterable listaTransactions(Model model){
+	@GetMapping(value = "all")
+	public ResponseEntity<Response<List<TransactionsDto>>> getAllTransactions() {
+		log.info("Getting all registers transactions");
+		Response<List<TransactionsDto>> response = new Response<>();
+		Optional<List<Transactions>> transactionsList = this.transactionsService.getAllTransactions();
 
-	    Iterable<Transactions> transactions = repository.findAll();
-	    model.addAttribute("transactions", transactions);
+		if (!transactionsList.isPresent()) {
+			log.error("There are not registers transactions");
+			response.getErrors().add("There are not registers transactions");
+			return ResponseEntity.badRequest().body(response);
+		}
 
-		return (transactions);	
+		List<TransactionsDto> listTransactionsDto = new ArrayList<>();
+		for (Transactions transactions : transactionsList.get()) {
+			listTransactionsDto.add(this.fromTransactionsToDto(transactions));
+		}
+		response.setDate(listTransactionsDto);
+		return ResponseEntity.ok(response);
+
 	}
-	
-//	@GetMapping(value = "all")
-//	public ResponseEntity<Response<List<TransactionsDto>>> buscarPorTodostransactions() {
-//		log.info("Buscando todos os registros transactions");
-//		Response<List<TransactionsDto>> response = new Response<>();
-//		Optional<List<Transactions>> transactionsList = this.transactionsService.buscarPorTodosTransactions();
-//
-//		if (!transactionsList.isPresent()) {
-//			log.error("Não existe registros transactions");
-//			response.getErrors().add("Não existe registros transactions");
-//			return ResponseEntity.badRequest().body(response);
-//		}
-//
-//		List<TransactionsDto> listTransactionsDto = new ArrayList<>();
-//		for (Transactions transactions : transactionsList.get()) {
-//			listTransactionsDto.add(this.fromTransactionsToDto(transactions));
-//		}
-//		response.setData(listTransactionsDto);
-//		return ResponseEntity.ok(response);
-//
-//	}
-
 
 }
