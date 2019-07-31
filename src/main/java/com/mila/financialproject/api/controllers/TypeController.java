@@ -50,25 +50,29 @@ public class TypeController {
 	 * @param  type
 	 * @param  result
 	 * @return ResponseEntity<Response<TypeDto>>
-	 * @throws ParseException
+	 * @throws Exception 
 	 */
 	@PostMapping
-	public ResponseEntity<Response<TypeDto>> post(@Valid @RequestBody TypeDto typeDto, BindingResult result)
-			throws ParseException {
+	public ResponseEntity<TypeDto> post(@Valid @RequestBody TypeDto typeDto, BindingResult result)
+			throws Exception {
 		log.info("Posting type: {}", typeDto.toString());
-		Response<TypeDto> response = new Response<TypeDto>();
-		validateExistingData(typeDto, result);
+		
+		if(!validateAvailableName(typeDto.getName())) {
+			throw new Exception("Invalid name");
+		}
+		
 		Type type = this.fromTypeToDto(typeDto);
 
 		if (result.hasErrors()) {
 			log.error("Error validating type: {}", result.getAllErrors());
-			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
-			return ResponseEntity.badRequest().body(response);
+//			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
+//			return ResponseEntity.badRequest().body(response);
 		}
-
+		
+		
+		
 		type = this.typeService.persist(type);
-		response.setDate(this.fromDtoToType(type));
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok(this.fromDtoToType(type));
 	}
 
 	/**
@@ -77,9 +81,8 @@ public class TypeController {
 	 * @param typeDto
 	 * @param result
 	 */
-	private void validateExistingData(TypeDto typeDto, BindingResult result) {
-		this.typeService.getByType(typeDto.getName())
-				.ifPresent(type -> result.addError(new ObjectError("type", "Already registered.")));
+	private boolean validateAvailableName(String name) {
+		return !this.typeService.getByType(name).isPresent();
 	}
 
 	/**
@@ -142,11 +145,11 @@ public class TypeController {
 	 * @param  typeDto
 	 * @param  result
 	 * @return ResponseEntity<Response<typeDto>>
-	 * @throws NoSuchAlgorithmException
+	 * @throws Exception 
 	 */
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Response<TypeDto>> put(@PathVariable("id") Long id, @Valid @RequestBody TypeDto typeDto,
-			BindingResult result) throws NoSuchAlgorithmException {
+			BindingResult result) throws Exception {
 		log.info("Putting type: {}", typeDto.toString());
 		Response<TypeDto> response = new Response<TypeDto>();
 
@@ -178,15 +181,17 @@ public class TypeController {
 	 * @param  type
 	 * @param  typeDto
 	 * @param  result
-	 * @throws NoSuchAlgorithmException
+	 * @throws Exception 
 	 */
-	private void updateDataType(Type type, TypeDto typeDto, BindingResult result) throws NoSuchAlgorithmException {
+	private void updateDataType(Type type, TypeDto typeDto, BindingResult result) throws Exception {
 
 		if (!type.getName().equals(typeDto.getName())) {
-			this.typeService.getByType(typeDto.getName())
-					.ifPresent(func -> result.addError(new ObjectError("Type", "Type already registered.")));
-			type.setName(typeDto.getName());
+			if(!validateAvailableName(typeDto.getName())) {
+				throw new Exception("Invalid name");
+			}
 		}
+		type.setName(typeDto.getName());
+		type.setTransactionType(typeDto.getTransactionType());
 	}
 
 	/**
@@ -238,7 +243,7 @@ public class TypeController {
 	}
 
 	/**
-	 * Retorn  sum INCOME and OUTCOME.
+	 * Return  sum INCOME and OUTCOME.
 	 * 
 	 * @param  Month
 	 * @return ResponseEntity<Response<TypeDto>>
