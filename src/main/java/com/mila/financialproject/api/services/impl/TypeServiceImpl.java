@@ -32,23 +32,23 @@ public class TypeServiceImpl implements TypeService {
 	
 	@Override
 	public Type persist(Type type) {
-		log.info("Persistindo type: {}", type);
+		log.info("Persisting type: {}", type);
 		return this.typeRepository.save(type);
 	}
 
 	public Optional<Type> getTypeById(Long id) {
-		log.info("Buscando type pelo ID {}", id);
+		log.info("Getting type by ID {}", id);
 		return Optional.ofNullable(this.typeRepository.findOne(id));
 	}
 
 	@Override
 	public Optional<Type> getByType(String name) {
-		log.info("Buscando name {}", name);
+		log.info("Getting name {}", name);
 		return Optional.ofNullable(this.typeRepository.findByName(name));
 	}
 	
 	public void remove(Long id) {
-		log.info("Removendo type ID {}", id);
+		log.info("Removing type ID {}", id);
 		this.typeRepository.delete(id);
 	}
 

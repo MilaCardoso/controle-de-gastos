@@ -1,7 +1,5 @@
 package com.mila.financialproject.api.controllers;
 
-import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +25,6 @@ import com.mila.financialproject.api.dtos.TypeDto;
 import com.mila.financialproject.api.dtos.TypeSumDto;
 import com.mila.financialproject.api.entities.Type;
 import com.mila.financialproject.api.enums.TransactionType;
-import com.mila.financialproject.api.response.Response;
 import com.mila.financialproject.api.services.TypeService;
 
 @RestController
@@ -44,14 +40,6 @@ public class TypeController {
 	public TypeController() {
 	}
 
-	/**
-	 * Post new type.
-	 * 
-	 * @param  type
-	 * @param  result
-	 * @return ResponseEntity<Response<TypeDto>>
-	 * @throws Exception 
-	 */
 	@PostMapping
 	public ResponseEntity<TypeDto> post(@Valid @RequestBody TypeDto typeDto, BindingResult result)
 			throws Exception {
@@ -65,34 +53,17 @@ public class TypeController {
 
 		if (result.hasErrors()) {
 			log.error("Error validating type: {}", result.getAllErrors());
-//			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
-//			return ResponseEntity.badRequest().body(response);
+			ResponseEntity.badRequest().build();
 		}
-		
-		
 		
 		type = this.typeService.persist(type);
 		return ResponseEntity.ok(this.fromDtoToType(type));
 	}
 
-	/**
-	 * Checks if Type already registered.
-	 * 
-	 * @param typeDto
-	 * @param result
-	 */
 	private boolean validateAvailableName(String name) {
 		return !this.typeService.getByType(name).isPresent();
 	}
 
-	/**
-	 * Converts data from DTO to type.
-	 * 
-	 * @param  typeDto
-	 * @param  result
-	 * @return Type
-	 * @throws NoSuchAlgorithmException
-	 */
 	private Type fromTypeToDto(TypeDto typeDto) {
 		Type type = new Type();
 		type.setName(typeDto.getName());
@@ -101,12 +72,6 @@ public class TypeController {
 		return type;
 	}
 
-	/**
-	 * Population DTO with data from type.
-	 * 
-	 * @param  Type
-	 * @return TypeDto
-	 */
 	private TypeDto fromDtoToType(Type type) {
 		TypeDto typeDto = new TypeDto();
 		typeDto.setId(type.getId());
@@ -116,167 +81,107 @@ public class TypeController {
 		return typeDto;
 	}
 
-	/**
-	 * Delete one Type for ID.
-	 * 
-	 * @param  id
-	 * @return ResponseEntity<Response<Type>>
-	 */
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<Response<String>> delete(@PathVariable("id") Long id) {
+	public ResponseEntity<String> delete(@PathVariable("id") Long id) {
 		log.info("Deleting type: {}", id);
-		Response<String> response = new Response<String>();
 		Optional<Type> type = this.typeService.getTypeById(id);
 
 		if (!type.isPresent()) {
 			log.info("Error to delete type ID: {} it's invalid.", id);
-			response.getErrors().add("Error to delete type. Register not found to id " + id);
-			return ResponseEntity.badRequest().body(response);
+			ResponseEntity.badRequest().build();
 		}
 
 		this.typeService.remove(id);
-		return ResponseEntity.ok(new Response<String>());
+		return ResponseEntity.ok().build();
 	}
 
-	/**
-	 * Put data to one type.
-	 * 
-	 * @param  id
-	 * @param  typeDto
-	 * @param  result
-	 * @return ResponseEntity<Response<typeDto>>
-	 * @throws Exception 
-	 */
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Response<TypeDto>> put(@PathVariable("id") Long id, @Valid @RequestBody TypeDto typeDto,
+	public ResponseEntity<TypeDto> put(@PathVariable("id") Long id, @Valid @RequestBody TypeDto typeDto,
 			BindingResult result) throws Exception {
 		log.info("Putting type: {}", typeDto.toString());
-		Response<TypeDto> response = new Response<TypeDto>();
 
 		Optional<Type> type = this.typeService.getTypeById(id);
 
 		if (!type.isPresent()) {
 			log.info("Error to put type ID: {} it's invalid.", id);
-			response.getErrors().add("Error to put type. Register not found to id " + id);
-			return ResponseEntity.badRequest().body(response);
+			ResponseEntity.badRequest().build();
 		}
 
 		this.updateDataType(type.get(), typeDto, result);
 
 		if (result.hasErrors()) {
 			log.error("Error validating type: {}", result.getAllErrors());
-			result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
-			return ResponseEntity.badRequest().body(response);
+			ResponseEntity.badRequest().build();
 		}
 
 		this.typeService.persist(type.get());
-		response.setDate(this.fromDtoToType(type.get()));
 
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok(this.fromDtoToType(type.get()));
 	}
 
-	/**
-	 * Update all data to type with data finding in DTO.
-	 * 
-	 * @param  type
-	 * @param  typeDto
-	 * @param  result
-	 * @throws Exception 
-	 */
 	private void updateDataType(Type type, TypeDto typeDto, BindingResult result) throws Exception {
 
 		if (!type.getName().equals(typeDto.getName())) {
 			if(!validateAvailableName(typeDto.getName())) {
-				throw new Exception("Invalid name");
+				if(type.getTransactionType().equals(typeDto.getTransactionType())) {
+					throw new Exception("Invalid name");
+				}
 			}
 		}
 		type.setName(typeDto.getName());
 		type.setTransactionType(typeDto.getTransactionType());
 	}
 
-	/**
-	 * Return one type by ID.
-	 * 
-	 * @param Id
-	 * @return ResponseEntity<Response<TypeDto>>
-	 */
 	@GetMapping(value = "id/{id}")
-	public ResponseEntity<Response<TypeDto>> getById(@PathVariable("id") Long id) {
+	public ResponseEntity<TypeDto> getById(@PathVariable("id") Long id) {
 		log.info("Getting type by Id: {}", id);
-		Response<TypeDto> response = new Response<TypeDto>();
 		Optional<Type> type = this.typeService.getTypeById(id);
 
 		if (!type.isPresent()) {
 			log.error("Type not found Id: {}", id);
-			response.getErrors().add("Type not found Id " + id);
-			return ResponseEntity.badRequest().body(response);
+			ResponseEntity.badRequest().build();
 		}
 
-		response.setDate(this.fromDtoToType(type.get()));
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok(this.fromDtoToType(type.get()));
 	}
 
-	/**
-	 * Return all registers Type.
-	 * 
-	 * @return ResponseEntity<Response<TypeDto>>
-	 */
 	@GetMapping(value = "all")
-	public ResponseEntity<Response<List<TypeDto>>> getAllType() {
+	public ResponseEntity<List<TypeDto>> getAllType() {
 		log.info("Getting all registers type");
-		Response<List<TypeDto>> response = new Response<>();
 		Optional<List<Type>> typeList = this.typeService.getAllType();
 
 		if (!typeList.isPresent()) {
 			log.error("There are not registers type");
-			response.getErrors().add("There are not registers type");
-			return ResponseEntity.badRequest().body(response);
+			ResponseEntity.badRequest().build();
 		}
 
 		List<TypeDto> listTypeDto = new ArrayList<>();
 		for (Type type : typeList.get()) {
 			listTypeDto.add(this.fromDtoToType(type));
 		}
-		response.setDate(listTypeDto);
-		return ResponseEntity.ok(response);
+
+		return ResponseEntity.ok(listTypeDto);
 
 	}
 
-	/**
-	 * Return  sum INCOME and OUTCOME.
-	 * 
-	 * @param  Month
-	 * @return ResponseEntity<Response<TypeDto>>
-	 */
 	@GetMapping(value = "monthlySum/{mes}")
-	public ResponseEntity<Response<MonthlySumDto>> monthlySum(@PathVariable("mes") Integer mes) {
+	public ResponseEntity<MonthlySumDto> monthlySum(@PathVariable("mes") Integer mes) {
 		log.info("Summing for Transaction type");
-		Response<MonthlySumDto> response = new Response<MonthlySumDto>();
 		MonthlySumDto monthlySumDto = new MonthlySumDto();
 		monthlySumDto.setSumIncome(this.typeService.sumValuesByTransactionType(TransactionType.IN, mes));
 		monthlySumDto.setSumOutcome(this.typeService.sumValuesByTransactionType(TransactionType.OUT, mes));	
 		monthlySumDto.setDifference(monthlySumDto.getSumIncome() - monthlySumDto.getSumOutcome());
 		
-		response.setDate(monthlySumDto);
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok(monthlySumDto);
 	}
 	
-	/**
-	 * Return  sum for Type.
-	 * 
-	 * @param  Month
-	 * @param  transactionType 
-	 * @return ResponseEntity<Response<TypeDto>>
-	 */
 	@GetMapping(value = "TypeSum/{mes}/{transactionType}")
-	public ResponseEntity<Response<List<TypeSumDto>>> typeSum(@PathVariable("mes") Integer month, 
-			                                            @PathVariable("transactionType") TransactionType transactionType) {
+	public ResponseEntity<List<TypeSumDto>> typeSum(@PathVariable("mes") Integer month, 
+			                                        @PathVariable("transactionType") TransactionType transactionType) {
 		log.info("Sum values for type");
-		Response<List<TypeSumDto>> response = new Response<>();
 		List<TypeSumDto> typeSumList = this.typeService.sumValuesByType(transactionType, month);
 
-		response.setDate(typeSumList);
-		return ResponseEntity.ok(response);
+		return ResponseEntity.ok(typeSumList);
 		
 	}
 	
