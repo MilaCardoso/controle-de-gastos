@@ -139,7 +139,6 @@ public class TransactionsController {
 		return ResponseEntity.ok(this.fromTransactionsToDto(transactions.get()));
 	}
 	
-
 	@GetMapping(value = "all")
 	public ResponseEntity<List<TransactionsDto>> getAllTransactions() {
 		log.info("Getting all registers transactions");

@@ -1,6 +1,7 @@
 package com.mila.financialproject.api.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -22,7 +23,8 @@ public class Transactions implements Serializable {
 	private Long id;
 	private Date date;
 	private String description;
-	private Double value;
+	@Column(precision=10, scale=2)
+	private BigDecimal value;
 	private Type type;
 	private Date updateDate;
 
@@ -67,11 +69,11 @@ public class Transactions implements Serializable {
 	}
 
 	@Column(name = "value", nullable = true)
-	public Double getValue() {
+	public BigDecimal getValue() {
 		return value;
 	}
 
-	public void setValue(Double value) {
+	public void setValue(BigDecimal value) {
 		this.value = value;
 	}
 

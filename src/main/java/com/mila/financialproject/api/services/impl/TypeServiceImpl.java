@@ -1,5 +1,6 @@
 package com.mila.financialproject.api.services.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,21 +59,21 @@ public class TypeServiceImpl implements TypeService {
 		return Optional.ofNullable(this.typeRepository.findAll());
 	}
 	
-	public Double sumValuesByTransactionType(TransactionType transactionType, Integer mes){
-	    TypedQuery<Double> query = manager.createQuery("select sum(p.valor) from Transactions p join p.tipo t "
-	    		                 + "where t.transactionType = :transactionType and month(p.data) = :mes", Double.class);
+	public BigDecimal sumValuesByTransactionType(TransactionType transactionType, Integer month){
+	    TypedQuery<BigDecimal> query = manager.createQuery("select sum(p.value) from Transactions p join p.type t "
+	    		                 + "where t.transactionType = :transactionType and month(p.date) = :month", BigDecimal.class);
 	    query.setParameter("transactionType", transactionType);
-	    query.setParameter("mes", mes);
+	    query.setParameter("month", month);
 
 	    return query.getSingleResult();
 	}
 	
-	public List<TypeSumDto> sumValuesByType(TransactionType transactionType, Integer mes){
-	   Query query = manager.createQuery("select t, sum(p.valor) from Transactions p join p.tipo t "
-	    		                 + " where t.transactionType = :transactionType and month(p.data) = :mes "
+	public List<TypeSumDto> sumValuesByType(TransactionType transactionType, Integer month){
+	   Query query = manager.createQuery("select t, sum(p.value) from Transactions p join p.type t "
+	    		                 + " where t.transactionType = :transactionType and month(p.date) = :month "
 	    		                 + " group by t");
 	    query.setParameter("transactionType", transactionType);
-	    query.setParameter("mes", mes);
+	    query.setParameter("month", month);
 
 	    return query.getResultList();
 	}

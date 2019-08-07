@@ -164,19 +164,20 @@ public class TypeController {
 
 	}
 
-	@GetMapping(value = "monthlySum/{mes}")
-	public ResponseEntity<MonthlySumDto> monthlySum(@PathVariable("mes") Integer mes) {
+	@GetMapping(value = "monthlySum/{month}")
+	public ResponseEntity<MonthlySumDto> monthlySum(@PathVariable("month") Integer month) {
 		log.info("Summing for Transaction type");
 		MonthlySumDto monthlySumDto = new MonthlySumDto();
-		monthlySumDto.setSumIncome(this.typeService.sumValuesByTransactionType(TransactionType.IN, mes));
-		monthlySumDto.setSumOutcome(this.typeService.sumValuesByTransactionType(TransactionType.OUT, mes));	
-		monthlySumDto.setDifference(monthlySumDto.getSumIncome() - monthlySumDto.getSumOutcome());
+		monthlySumDto.setSumIncome(this.typeService.sumValuesByTransactionType(TransactionType.IN, month));
+		monthlySumDto.setSumOutcome(this.typeService.sumValuesByTransactionType(TransactionType.OUT, month));	
+//		monthlySumDto.setDifference(monthlySumDto.getSumIncome() - monthlySumDto.getSumOutcome());
+		monthlySumDto.setDifference(monthlySumDto.getSumIncome().subtract(monthlySumDto.getSumOutcome()));
 		
 		return ResponseEntity.ok(monthlySumDto);
 	}
 	
-	@GetMapping(value = "TypeSum/{mes}/{transactionType}")
-	public ResponseEntity<List<TypeSumDto>> typeSum(@PathVariable("mes") Integer month, 
+	@GetMapping(value = "TypeSum/{month}/{transactionType}")
+	public ResponseEntity<List<TypeSumDto>> typeSum(@PathVariable("month") Integer month, 
 			                                        @PathVariable("transactionType") TransactionType transactionType) {
 		log.info("Sum values for type");
 		List<TypeSumDto> typeSumList = this.typeService.sumValuesByType(transactionType, month);

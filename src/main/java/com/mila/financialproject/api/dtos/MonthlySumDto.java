@@ -1,41 +1,43 @@
 package com.mila.financialproject.api.dtos;
 
+import java.math.BigDecimal;
+
 public class MonthlySumDto {
 	
-	private Double sumIncome;
-	private Double sumOutcome;
-	private Double difference;
+	private BigDecimal sumIncome;
+	private BigDecimal sumOutcome;
+	private BigDecimal difference;
 	
 	public MonthlySumDto() {
 	}
 	
-	public Double getSumIncome() {
+	public BigDecimal getSumIncome() {
 		if(sumIncome == null) {
-			sumIncome = (double) 00;
+			sumIncome = new BigDecimal(0.00);
 		}
 		return sumIncome;
 	}
 
-	public void setSumIncome(Double sumIncome) {
+	public void setSumIncome(BigDecimal sumIncome) {
 		this.sumIncome = sumIncome;
 	}
 
-	public Double getSumOutcome() {
+	public BigDecimal getSumOutcome() {
 		if(sumOutcome == null) {
-			sumOutcome = (double) 00;
+			sumOutcome = new BigDecimal(0.00);
 		}
 		return sumOutcome;
 	}
 
-	public void setSumOutcome(Double sumOutcome) {
+	public void setSumOutcome(BigDecimal sumOutcome) {
 		this.sumOutcome = sumOutcome;
 	}
 
-	public Double getDifference() {
+	public BigDecimal getDifference() {
 		return difference;
 	}
 
-	public void setDifference(Double difference) {
+	public void setDifference(BigDecimal difference) {
 		this.difference = difference;
 	}
 	

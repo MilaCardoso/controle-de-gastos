@@ -1,5 +1,6 @@
 package com.mila.financialproject.api.dtos;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -14,7 +15,7 @@ public class TransactionsDto {
 	private Long id;
 	private Date date;
 	private String description;
-	private Double value;
+	private BigDecimal value;
 	private Type type;
 	private Date updateDate;
 	
@@ -52,11 +53,11 @@ public class TransactionsDto {
 	}
 
 	@NotNull(message = "Value can not be empty.")
-	public Double getValue() {
+	public BigDecimal getValue() {
 		return value;
 	}
 
-	public void setValue(Double value) {
+	public void setValue(BigDecimal value) {
 		this.value = value;
 	}
 	
